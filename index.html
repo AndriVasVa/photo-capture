@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Captura de Foto</title>
+</head>
+<body>
+    <h1>Captura de Foto</h1>
+    <video id="video" width="320" height="240" autoplay></video>
+    <button id="snap">Tomar Foto</button>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    <script>
+        // Acceder a la cámara
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var video = document.getElementById('video');
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(err) {
+                console.log("Error: " + err);
+            });
+
+        // Capturar la foto
+        document.getElementById('snap').addEventListener('click', function() {
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            context.drawImage(video, 0, 0, 320, 240);
+            var dataURL = canvas.toDataURL('image/png');
+            window.location.href = "access://save_photo?data=" + encodeURIComponent(dataURL);
+        });
+    </script>
+</body>
+</html>
